@@ -1,14 +1,50 @@
-import express from 'express';
+import express from 'express'
+import exitHook from 'async-exit-hook'
+import { CONNECT_DB, CLOSE_DB } from '~/config/mongodb'
+import { env } from '~/config/environment'
 
-const app = express()
+const START_SERVER = () => {
+  const app = express()
 
-const hostName = 'localhost'
-const port = 8088
+  const hostname = env.APP_HOST
+  const port = env.APP_PORT
 
-app.get('/', function (req, res) {
-    res.send('<h1>Hello world</h1>')
-})
+  app.get('/', async (req, res) => {
+    res.end('<h1>Hello World!</h1><hr>')
+  })
 
-app.listen(port, hostName, () => {
-    console.log(`Listening on http://${hostName}:${port}`)
-})
+  app.listen(port, hostname, () => {
+    // eslint-disable-next-line no-console
+    console.log(`Hi ${env.AUTHOR}, Your back-end is running at http://${ hostname }:${ port }/`)
+  })
+
+  exitHook(() => {
+    console.log('\n3. Disconnecting from MongoDB')
+    CLOSE_DB()
+    console.log('4. Disconnected from MongoDB')
+  })
+}
+
+(async () => {
+  try {
+    console.log('1. Connecting to the DB Atlas...')
+    await CONNECT_DB()
+    console.log('2. Connected to the DB Atlas...')
+
+    // Chạy server sau khi connect đc với DB
+    START_SERVER()
+  } catch (error) {
+    console.error(error)
+    process.exit(0)
+  }
+})()
+
+// CONNECT_DB()
+//   .then(() => console.log(`Connected to DB Atlas`))
+//   .then(() => START_SERVER())
+//   .catch((err) => {
+//     // bắt đc lỗi thì tắt máy đi ngủ
+//     console.error(err)
+//     process.exit(0)
+//   })
+
