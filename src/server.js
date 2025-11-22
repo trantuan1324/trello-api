@@ -10,6 +10,9 @@ const START_SERVER = () => {
   const hostname = env.APP_HOST
   const port = env.APP_PORT
 
+  // Enable req.body json data
+  app.use(express.json())
+  // User APIs v1
   app.use('/v1', APIs_V1)
 
   app.listen(port, hostname, () => {
@@ -17,6 +20,7 @@ const START_SERVER = () => {
     console.log(`Hi ${env.AUTHOR}, Your back-end is running at http://${hostname}:${port}/`)
   })
 
+  // Clean up trước khi dừng server
   exitHook(() => {
     console.log('\n3. Disconnecting from MongoDB')
     CLOSE_DB()
