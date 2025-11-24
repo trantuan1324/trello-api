@@ -1,5 +1,6 @@
 import Joi from 'joi'
 import { StatusCodes } from 'http-status-codes'
+import ApiError from "~/utils/ApiError";
 
 const createNewBoard = async (req, res, next) => {
   const correctCondition = Joi.object({
@@ -16,13 +17,12 @@ const createNewBoard = async (req, res, next) => {
   try {
     // aboutEarly: false, trả về tất cả lỗi, mặc định sẽ là true (52)
     await correctCondition.validateAsync(req.body, { abortEarly: false })
-    // next()
-    res.status(StatusCodes.CREATED).json({ message: 'New board' })
+    // Validate dữ liệu nếu hợp lệ sẽ cho đi tiếp sang controller
+    next()
   } catch (error) {
-    console.log(error)
-    res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({
-      errors: new Error(error).message
-    })
+    const errorMessage = new Error(error).message
+    const customError = new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, errorMessage)
+    next(customError)
   }
 }
 
