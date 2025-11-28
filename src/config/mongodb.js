@@ -1,9 +1,8 @@
-import {MongoClient, ServerApiVersion} from 'mongodb'
+import { MongoClient, ServerApiVersion } from 'mongodb'
 import { env } from '~/config/environment'
 
 const MONGODB_URI = env.MONGODB_URI
 const DB_NAME = env.DATABASE_NAME
-
 
 // khởi tạo một instance ban đầu là null vì chưa có kết nối
 let trelloDatabaseInstance = null
