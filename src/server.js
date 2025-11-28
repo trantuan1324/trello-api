@@ -42,6 +42,7 @@ const START_SERVER = () => {
     // Chạy server sau khi connect đc với DB
     START_SERVER()
   } catch (error) {
+    // bắt đc lỗi thì tắt máy đi ngủ
     console.error(error)
     process.exit(0)
   }
@@ -51,8 +52,6 @@ const START_SERVER = () => {
 //   .then(() => console.log(`Connected to DB Atlas`))
 //   .then(() => START_SERVER())
 //   .catch((err) => {
-//     // bắt đc lỗi thì tắt máy đi ngủ
 //     console.error(err)
 //     process.exit(0)
 //   })
-
