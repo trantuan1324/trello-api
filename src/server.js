@@ -4,9 +4,13 @@ import { CONNECT_DB, CLOSE_DB } from '~/config/mongodb'
 import { env } from '~/config/environment'
 import { APIs_V1 } from '~/routes/v1'
 import { errorHandlingMiddleware } from '~/middlewares/errorHandlingMiddleware'
+import cors from 'cors'
+import { corsOptions } from '~/config/cors'
 
 const START_SERVER = () => {
   const app = express()
+
+  app.use(cors(corsOptions))
 
   const hostname = env.APP_HOST
   const port = env.APP_PORT
@@ -22,7 +26,9 @@ const START_SERVER = () => {
 
   app.listen(port, hostname, () => {
     // eslint-disable-next-line no-console
-    console.log(`Hi ${env.AUTHOR}, Your back-end is running at http://${hostname}:${port}/`)
+    console.log(
+      `Hi ${env.AUTHOR}, Your back-end is running at http://${hostname}:${port}/`
+    )
   })
 
   // Clean up trước khi dừng server
@@ -33,7 +39,7 @@ const START_SERVER = () => {
   })
 }
 
-(async () => {
+;(async () => {
   try {
     console.log('1. Connecting to the DB Atlas...')
     await CONNECT_DB()
